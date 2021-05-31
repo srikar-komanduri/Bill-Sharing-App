@@ -6,6 +6,8 @@
 package Models;
 
 import java.util.UUID;
+import lombok.*;
+@Getter
 
 /**
  *
@@ -18,24 +20,12 @@ public class User {
     private String userId;
     
     
-    public User(String name,String email,String phoneNumber){
+    public User(String email,String name,String phoneNumber){
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.userId = UUID.randomUUID().toString();
         
-    } 
-    public String getName(){
-        return this.name;
-    }
-    public String getEmail(){
-        return this.email;
-    }
-    public String getPhoneNumber(){
-        return this.phoneNumber;
-    }
-    public String getuserId(){
-        return this.userId;
-    }
+    }     
     
 }
