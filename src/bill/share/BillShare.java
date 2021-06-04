@@ -6,6 +6,7 @@ import Exceptions.*;
 import java.time.*;
 import java.util.*;
 
+
 /**
  *
  * @author Srikar
@@ -13,14 +14,16 @@ import java.util.*;
 public class BillShare {
     static UserService userService;
     static ExpenseService expenseService;
+    static Scanner sc = new Scanner(System.in);
     public static void main(String[] args)
             throws ExpenseDoesNotExistException,UserDoesNotExistException {
+        
         userService = new UserService();
         expenseService = new ExpenseService();
-        // creates hardocded 20 users
-        createTestUsers();
+        
+        createUser();
         // creates a hardcoded expense 
-        Expense expense = createTestExpense(); 
+        Expense expense = createExpense(); 
         String expenseId = expense.getExpenseId();
         
         // now we will add users to the expense group with their shares
@@ -55,33 +58,37 @@ public class BillShare {
         System.out.println("END OF PROGRAM");
     }
     
-    private static void createTestUsers(){
-        User user1 = userService.createUser("bagesh@gmail.com", "bagesh", "3486199635");
-        User user2 = userService.createUser("ajay@gmail.com", "ajay", "6112482630");
-        User user3 = userService.createUser("amit@gmail.com", "amit", "2509699232");
-        User user4 = userService.createUser("kamal@gmail.com", "kamal", "5816355154");
-        User user5 = userService.createUser("neha@gmail.com", "neha", "7737316054");
-        User user6 = userService.createUser("kajal@gmail.com", "kajal", "4813053349");
-        User user7 = userService.createUser("jyothi@gmail.com", "jyothi", "3974178644");
-        User user8 = userService.createUser("subin@gmail.com", "subin", "4768463294");
-        User user9 = userService.createUser("deepak@gmail.com", "deepak", "4829338803");
-        User user10 = userService.createUser("vishnu@gmail.com", "vishnu", "3384071602");
-        User user11 = userService.createUser("mayank@gmail.com", "mayank", "2376951206");
-        User user12 = userService.createUser("anu@gmail.com", "anu", "8478577491");
-        User user13 = userService.createUser("kavya@gmail.com", "kavya", "7505888698");
-        User user14 = userService.createUser("divya@gmail.com", "divya", "9587030077");
-        User user15 = userService.createUser("prabhu@gmail.com", "prabhu", "3303167757");
-        User user16 = userService.createUser("sangeeth@gmail.com", "sangeeth", "7409081739");
-        User user17 = userService.createUser("rajesh@gmail.com", "rajesh", "2367659285");
-        User user18 = userService.createUser("alamelu@gmail.com", "alamelu", "8938025834");
-        User user19 = userService.createUser("aruna@gmail.com", "aruna", "8189506064");
-        User user20 = userService.createUser("palani@gmail.com", "palani", "2973733105");
+    private static void createUser(){
+        System.out.println("*****CREATING NEW USER*****");
+        System.out.println("Enter email : ");
+        String email = sc.next();
+        System.out.println("enter name : ");
+        String name = sc.next();
+        System.out.println("enter phone number : ");
+        String phoneNumber = sc.next();
+        
+        User user1 = userService.createUser(email,name,phoneNumber);
+        System.out.println("*****NEW USER CREATED SUCCESSFULLY*****");
     }
     
-    private static Expense createTestExpense(){
-        String email = "bagesh@gmail.com";
-        String user_id = UserRepository.userRepository.get(email).getUserId();
-        Expense expense = expenseService.createExpense(user_id,1000.0,"Lunch expense","we all had lunch in Tarama",LocalDateTime.of(2020, Month.JUNE, 19, 12, 0));
+    private static Expense createExpense()throws UserDoesNotExistException {
+        System.out.println("*****CREATING NEW EXPENSE******");
+        System.out.println("Which user is creating the expense? enter their email id : ");
+        String email = sc.next();        
+        if(!UserRepository.userRepository.containsKey(email)){
+            throw new UserDoesNotExistException("user who is trying to create expense doesn't exist");
+        }
+        
+        User user = UserRepository.userRepository.get(email);
+        String userId = user.getUserId();
+        System.out.println("Enter total amount of expense : ");
+        double expenseAmount = sc.nextDouble();
+        System.out.println("Enter Expense title : ");
+        String title = sc.next();
+        System.out.println("Enter Expense description : ");
+        String description = sc.next();        
+        Expense expense = expenseService.createExpense(userId,expenseAmount,title,description,LocalDateTime.of(2020, Month.JUNE, 19, 12, 0));
+        System.out.println("*****NEW EXPENSE CREATED SUCCESSFULLY*****");
         return expense;
     }
     
